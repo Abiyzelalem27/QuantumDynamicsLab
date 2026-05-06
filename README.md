@@ -1,8 +1,69 @@
 # Computational Quantum Dynamics SS2026
 
-[![CI](https://github.com/NiklasEuler/CQD_SS26/actions/workflows/python_CI.yml/badge.svg)](https://github.com/NiklasEuler/CQD_SS26/actions/workflows/python_CI.yml)
-[![codecov](https://codecov.io/github/NiklasEuler/CQD_SS26/graph/badge.svg?token=D1DBACZIR8)](https://codecov.io/github/NiklasEuler/CQD_SS26)
+# Computational Quantum Dynamics (SS 2026)
 
-This repository contains the codebase for the exercise sheets covered in the lecture "Computational Quantum Dynamics" from the summer semester 2026. It will be updated on a weekly basis to contain sample solutions to all posted exercises. New sheets are uploaded each Monday.
-Optional sheet submissions are due the following Monday, 8pm.
-The tutorials will take place in SR 5 Physik, Helmholtzweg 4, on Tuesdays, 4-6pm.
+This repository contains the codebase and weekly programming exercises for the course  
+**“Computational Quantum Dynamics” (Summer Semester 2026)**.
+
+The goal of the course is to develop numerical tools for solving quantum mechanical problems using Python, with a focus on:
+
+- Discretization of quantum systems  s
+- Eigenvalue problems for Hamiltonians  
+- Time evolution methods (FFT, split-step, etc.)  
+- Basis expansion methods  
+- Sparse and efficient numerical linear algebra  
+
+---
+
+## 🧪 Weekly Programming Exercises
+
+Each week introduces a new numerical method and builds on previous implementations.  
+The exercises are designed to gradually build a reusable “quantum toolbox”.
+
+---
+
+### Week 1 — Single Particle in a 1D Potential
+- Finite difference representation of the Hamiltonian  
+- Harmonic oscillator eigenvalue problem  
+- Analytical vs numerical solutions  
+- Double well potentials  
+- Convergence analysis  
+
+---
+
+### Week 2 — Time Evolution & Diagonalization
+- Expansion in eigenbasis  
+- Quantum time evolution of wave packets  
+- Expectation values and observables  
+- Comparison of dense vs sparse diagonalization methods  
+- Performance scaling analysis  
+
+---
+
+### Week 3 — Split-Step Fourier Method
+- Fast Fourier Transform (FFT) methods  
+- Momentum-space propagation  
+- Split-step time evolution algorithm  
+- Wave packet dynamics in various potentials  
+- Scattering and tunneling  
+
+---
+
+### Week 4 — Coupled Oscillators
+- Two-dimensional quantum systems  
+- Tensor product Hilbert spaces  
+- Ladder operator representation  
+- Basis expansion of interacting systems  
+- Classical vs quantum dynamics comparison  
+
+---
+
+## 🛠 Requirements
+
+To run the code, you need:
+
+- Python ≥ 3.10  
+- NumPy  
+- SciPy  
+- Matplotlib  
+- JupyterLab (recommended)  
