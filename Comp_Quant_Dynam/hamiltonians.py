@@ -46,14 +46,7 @@ def HO_potential(x):
     """
     
     return 0.5 * np.diag(x ** 2)
-    
-def double_well_potential(x, lam):
-    """Double-well potential used to model a system with two stable minima
-    separated by a potential barrier. x: position grid, lam: controls
-    the height of the barrier between the two wells.
 
-    V(x) = -1/2 x^2 + λ x^4 """
-    return -0.5 * x**2 + lam * x**4 
 
 #################### Solution sheet 2 ####################
 
