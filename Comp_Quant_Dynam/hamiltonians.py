@@ -174,3 +174,11 @@ def build_H_coupled_HO_man(N1, N2, lam):
             col = np.append(col,i)
 
     return sparse.coo_matrix((values, (row, col)), shape=(N1*N2, N1*N2))
+
+def exact_energy_2D(n_cm, n_rel, lam, k, m):
+    """
+    Exact analytical energies for two coupled harmonic oscillators with ħ = 1.
+    """
+    omega_cm = np.sqrt(k/m)
+    omega_rel = np.sqrt((k + 2*lam)/m)
+    return ((n_cm + 0.5)* omega_cm + (n_rel + 0.5)* omega_rel) 
