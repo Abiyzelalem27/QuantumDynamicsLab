@@ -182,3 +182,4 @@ def exact_energy_2D(n_cm, n_rel, lam, k, m):
     omega_cm = np.sqrt(k/m)
     omega_rel = np.sqrt((k + 2*lam)/m)
     return ((n_cm + 0.5)* omega_cm + (n_rel + 0.5)* omega_rel) 
+
