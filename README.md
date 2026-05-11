@@ -1,4 +1,9 @@
 
+
+[![CI](https://github.com/Abiyzelalem27/CQD_SS26/actions/workflows/python_CI.yml/badge.svg)](https://github.com/Abiyzelalem27/CQD_SS26/actions/workflows/python_CI.yml)
+
+[![codecov](https://codecov.io/github/Abiyzelalem27/CQD_SS26/graph/badge.svg)](https://codecov.io/github/Abiyzelalem27/CQD_SS26)
+
 # Computational Quantum Dynamics (SS 2026)
 
 This repository contains the codebase and weekly programming exercises for the course  
