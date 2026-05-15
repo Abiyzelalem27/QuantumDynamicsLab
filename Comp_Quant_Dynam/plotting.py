@@ -51,8 +51,8 @@ def plot_eigenstate(n, x, evals, evecs):
 
 def animate(t, *args):
     """
-    Animates the time evolution of a wavefunction for a given time 't' and function arguments 'args'.
-    The first argument in 'args' is the function to be animated, the second argument is the x values for plotting,
+    Animates the time evolution of a function for a given time 't' and function arguments 'args'.
+    The first argument in `args` is the function to be animated, the second argument is the x values for plotting,
     and the third argument is the line object to be updated. The remaining arguments are passed to the function being animated.
     """
     func = args[0] # function to be animated
@@ -68,15 +68,35 @@ def animate(t, *args):
 
 
 def multi_animate(t, *args):
+    """
+    Animates multiple functions for a given time 't' and function arguments 'args'.
+    Each function is animated by `animate`, and the results are collected in a list of line objects to be returned.
+    The arguments in `args` are expected to be in the format (func, xvals, line, *fargs) for each function to be animated, where `func` is the function to be animated,
+    `xvals` are the x values for plotting, `line` is the line object to be updated, and `fargs` are the function arguments.
+    """
     
     n_lines = len(args)
     lines = []
     for i in range(n_lines):
-        func = args[i][0] # function to be animated
-        xvals = args[i][1] # x values for plotting
-        line = args[i][2] # line object to be updated
-        fargs = args[i][3:] # function arguments
-        y = func(t, *fargs)
-        line.set_data(xvals, y)
+        line = animate(t, *args[i])
         lines.append(line)
     return lines
+
+
+##################### Exercise sheet 4 ####################
+
+
+def plot_prob_amplitude_2D(t, wfcts, tvec, L):
+    """
+    Plots the probability amplitude of a 2D wavefunction `wfcts` at time `t` for a given time vector `tvec` and spatial extent `L`.
+    The wavefunction is expected to be defined on a grid of size (len(tvec), npoints, npoints), where `npoints` is the number of spatial grid points in each dimension.
+    """
+    
+    fig = plt.figure()
+    ax = fig.add_subplot()
+    ax.imshow(np.abs(wfcts[t]) ** 2, extent=(-L/2, L/2, -L/2, L/2), interpolation='none', origin='lower')
+    # add labels and legends
+    ax.set_title("$t=$" + str(tvec[t]))
+    ax.set_xlabel("$x_2$")
+    ax.set_ylabel("$x_1$")
+    plt.show()

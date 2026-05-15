@@ -1,5 +1,10 @@
-import numpy as np   # standard numerics library
+
+
 import math
+from qutip import basis
+import numpy as np   # standard numerics library
+from scipy.special import factorial 
+
 
 def example_func(x):
     """
@@ -85,3 +90,37 @@ def state2idx(N1, N2, state):
     return i
     
 
+##################### Solution sheet 4 ###################
+
+def create_coherent_state(N, alpha):
+    """
+    Creates a coherent state |alpha> in the Fock basis of dimension `N` with complex amplitude `alpha`.
+    The coherent state is defined as:
+    |alpha> = exp(-|alpha|^2/2) sum_{n=0}^{N-1} (alpha^n / sqrt(n!)) |n>
+    """
+
+    nvec = np.arange(N)
+    state = np.exp(-np.abs(alpha) ** 2 / 2) * np.power(alpha, nvec) / np.sqrt(factorial(nvec))
+    return state
+
+def expectation_value(state, operator):
+    """
+    Computes the expectation value of an `operator` in a given `state`.
+    """
+
+    return np.vdot(state, operator @ state)
+
+    
+##################### lecture 5  ###################
+
+def create_qubit_state(theta, phi):
+    """
+    Creates a QuTiP state object (Qobj) for a given theta and phi.
+    theta: angle from the z-axis [0, pi]
+    phi: azimuthal angle [0, 2pi]
+    basis(2,0) = qubit in state |0⟩
+    basis(2,1) = qubit in state |1⟩
+    """
+    state = (np.cos(theta/2) * basis(2, 0) + 
+            np.exp(1j * phi) * np.sin(theta/2) * basis(2, 1))
+    return state 

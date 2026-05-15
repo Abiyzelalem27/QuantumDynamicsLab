@@ -1,5 +1,6 @@
-import numpy as np   # standard numerics library
 
+
+import numpy as np   # standard numerics library
 
 #################### Solution sheet 2 ####################
 
@@ -59,4 +60,4 @@ def t_evol_split_step_fourier(psi0, V_func, tvec, xvals):
         # store the result
         psit[i + 1] = psit[i + 1, :]
 
-    return psit
+    return psit 
