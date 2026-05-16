@@ -12,23 +12,6 @@ Y = np.array([[0, -1j],
 Z = np.array([[1,  0],
               [0, -1]], dtype=complex)
 
-def rotation_gate(theta, n):
-    """
-    This function implements a unitary rotation of a single qubit
-    by an angle `theta` around an axis `n` on the Bloch sphere.
-
-    The rotation generator is constructed as N = n · σ,
-    where σ = (X, Y, Z) are the Pauli matrices.
-
-    Parameters
-    theta : Rotation angle
-    n : Rotation axis
-    """
-    nx, ny, nz = n
-    N = nx * X + ny * Y + nz * Z
-    R = np.cos(theta / 2) * I - 1j * np.sin(theta / 2) * N 
-    return R
-
 ##################### Solution sheet 4 #################### 
 
 
