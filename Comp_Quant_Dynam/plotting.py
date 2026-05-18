@@ -74,7 +74,7 @@ def multi_animate(t, *args):
     The arguments in `args` are expected to be in the format (func, xvals, line, *fargs) for each function to be animated, where `func` is the function to be animated,
     `xvals` are the x values for plotting, `line` is the line object to be updated, and `fargs` are the function arguments.
     """
-    
+
     n_lines = len(args)
     lines = []
     for i in range(n_lines):
