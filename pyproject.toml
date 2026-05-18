@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "Comp_Quant_Dynam"
 version = "0.0.1"
-description = "Code repository with sample solutions for the Computational Quantum Dynamics course"
+description = "Code repository of Computational Quantum Dynamics course"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
@@ -17,7 +17,7 @@ dependencies = [
     "notebook<7",
     "jupyter_contrib_nbextensions",
     "qutip",
-]
+] 
 
 [project.optional-dependencies]
 test = [

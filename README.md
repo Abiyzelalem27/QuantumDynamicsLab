@@ -6,25 +6,8 @@
 
 # Computational Quantum Dynamics (SS 2026)
 
-This repository contains the codebase and weekly programming exercises for the course  
-**“Computational Quantum Dynamics” (Summer Semester 2026)**.
+This repository contains the codebase and weekly programming exercises for the course **“Computational Quantum Dynamics” (Summer Semester 2026)**.
 
-The goal of the course is to develop numerical tools for solving quantum mechanical problems using Python, with a focus on:
-
-- Discretization of quantum systems  s
-- Eigenvalue problems for Hamiltonians  
-- Time evolution methods (FFT, split-step, etc.)  
-- Basis expansion methods  
-- Sparse and efficient numerical linear algebra  
-
----
-
-## 🧪 Weekly Programming Exercises
-
-Each week introduces a new numerical method and builds on previous implementations.  
-The exercises are designed to gradually build a reusable “quantum toolbox”.
-
----
 
 ### Week 1 — Single Particle in a 1D Potential
 - Finite difference representation of the Hamiltonian  
@@ -33,7 +16,6 @@ The exercises are designed to gradually build a reusable “quantum toolbox”.
 - Double well potentials  
 - Convergence analysis  
 
----
 
 ### Week 2 — Time Evolution & Diagonalization
 - Expansion in eigenbasis  
@@ -42,7 +24,6 @@ The exercises are designed to gradually build a reusable “quantum toolbox”.
 - Comparison of dense vs sparse diagonalization methods  
 - Performance scaling analysis  
 
----
 
 ### Week 3 — Split-Step Fourier Method
 - Fast Fourier Transform (FFT) methods  
@@ -51,8 +32,6 @@ The exercises are designed to gradually build a reusable “quantum toolbox”.
 - Wave packet dynamics in various potentials  
 - Scattering and tunneling  
 
----
-
 ### Week 4 — Coupled Oscillators
 - Two-dimensional quantum systems  
 - Tensor product Hilbert spaces  
@@ -60,15 +39,4 @@ The exercises are designed to gradually build a reusable “quantum toolbox”.
 - Basis expansion of interacting systems  
 - Classical vs quantum dynamics comparison  
 
----
 
-## 🛠 Requirements
-
-To run the code, you need:
-
-- Python ≥ 3.10  
-- NumPy  
-- SciPy  
-- Matplotlib  
-- JupyterLab (recommended)  
-new change
