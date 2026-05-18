@@ -16,23 +16,20 @@ Z = np.array([[1,  0],
 
 
 def diagonal_op_sparse(arr, offsets = 0):
-    """
-    Returns a sparse diagonal matrix from a given 1D array `arr`.
+    """ Returns a sparse diagonal matrix from a given 1D array `arr`.
     The diagonal matrix has the elements of `arr` on its diagonal and zeros elsewhere.
     """
-    
     return sparse.diags_array(arr, offsets=offsets)
 
 def n_party_op_sparse(local_dims, idx, op):
     """Returns a sparse operator for an n-party system, where `local_dims` is a list of the local dimensions of each party, `idx` is the index of the party on which the local operator `op` acts, and `op` is the local operator represented as a 2D array.
     """
-    
     assert idx < len(local_dims), "Index of the local operator must be less than the total number of parties."
     assert op.shape == (local_dims[idx], local_dims[idx]), "Local operator must have the correct shape corresponding to the local dimension of the party."
 
     eye_left = sparse.eye_array(np.prod(local_dims[:idx])) # identity operator on the left of the local operator
     eye_right = sparse.eye_array(np.prod(local_dims[idx+1:])) # identity operator on the right of the local operator
-    full_op = sparse.kron(eye_left, sparse.kron(op, eye_right)) # full operator is the Kronecker product of the left identity, local operator, and right identity
+    full_op = sparse.kron(eye_left, sparse.kron(op, eye_right)) # full operator is the (np.kron) of the left identity, local operator, and right identity
     return full_op
 
 def a_operator_sparse(N):
