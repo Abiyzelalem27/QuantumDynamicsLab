@@ -124,3 +124,23 @@ def create_qubit_state(theta, phi):
     state = (np.cos(theta/2) * basis(2, 0) + 
             np.exp(1j * phi) * np.sin(theta/2) * basis(2, 1))
     return state 
+
+def check_if_sized(obsv_vec):
+    """
+    Helper function to check if the input `obsv_vec` is an iterable of operators or a single operator, and to determine the number of observables.
+    If `obsv_vec` is a single operator or a Sequence containing a single operator, it returns (1, obsv_vec).
+    If `obsv_vec` is an iterable of operators, it returns (n_obsv, obsv_vec) where n_obsv is the number of observables.
+    """
+    if isinstance(obsv_vec, Iterable) and not isinstance(obsv_vec, (str, bytes)) and getattr(obsv_vec, "ndim", None) != 2:
+        if isinstance(obsv_vec, Sequence):
+            n_obsv = len(obsv_vec)
+        else:
+            # e.g. generator: materialize once so length is defined
+            obsv_vec = tuple(obsv_vec)
+            n_obsv = len(obsv_vec)
+        if n_obsv == 1:
+            obsv_vec = obsv_vec[0] # if there is only one observable, return it as a single operator instead of a list
+    else:
+        n_obsv = 1
+
+    return n_obsv, obsv_vec

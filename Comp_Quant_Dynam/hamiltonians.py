@@ -1,10 +1,12 @@
 import numpy as np   # standard numerics library
+
+import numpy as np   # standard numerics library
 import math
 from scipy.special import hermite as herm
 import scipy.sparse as sparse # routines for sparse matrices
 
 from Comp_Quant_Dynam.utility import state2idx, idx2state
-from Comp_Quant_Dynam.operators import diagonal_op_sparse, n_party_op_sparse, x_operator_sparse, I, X, Y, Z
+from Comp_Quant_Dynam.operators import diagonal_op_sparse, n_party_op_sparse, x_operator_sparse, Sx_sparse, Sz_sparse, Sx_symm, Sz2_symm 
 
 #################### Solution sheet 1 ####################
 
@@ -13,9 +15,8 @@ def HO_eigenstates_exact(n, x):
     """
     Returns the n-th eigenstate of the quantum harmonic oscillator at position 'x' in numerical units.
     """
-
     normalization = 1 / np.sqrt(2 ** n * math.factorial(n) * np.sqrt(np.pi)) 
-    return normalization * herm(n)(x) * np.exp(-x ** 2 / 2)
+    return normalization * herm(n)(x) * np.exp(-x ** 2 / 2) 
 
 
 def HO_eigenenergies_exact(n):
@@ -283,4 +284,30 @@ def hermitian_operator(a0, a1, a2, a3):
     the Pauli basis operators.
     """
     H = (a0 * I + a1 * X + a2 * Y + a3 * Z)
+    return H 
+
+def build_H_TFIM(N, ome):
+    """
+    Builds the Hamiltonian matrix for the transverse field Ising model (TFIM) for `N` spin-1/2 particles and transverse field strength `ome` as a sparse matrix.
+    The Hamiltonian is given by:
+    H = -1/N * Sz^2 - ome * Sx
+    where Sx and Sz are the collective spin operators in the x and z directions, respectively.
+    """
+    
+    Sx = Sx_sparse(N)
+    Sz = Sz_sparse(N)
+    H = -Sz @ Sz / N - ome * Sx
     return H
+
+def build_H_TFIM_symm(N, ome):
+    """
+    Builds the Hamiltonian matrix for the transverse field Ising model (TFIM) for `N` spin-1/2 particles in the positive symmetric subspace and transverse field strength `ome` as a sparse matrix.
+    The Hamiltonian is given by:
+    H = -1/N * Sz^2 - ome * Sx
+    where Sx and Sz are the collective spin operators in the x and z directions, respectively.
+    """
+    
+    Sx = Sx_symm(N)
+    Sz2 = Sz2_symm(N)
+    H_symm = -Sz2 / N - ome * Sx
+    return H_symm 

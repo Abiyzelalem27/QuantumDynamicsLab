@@ -1,12 +1,6 @@
 
 
-from . import (
-    hamiltonians,
-    plotting,
-    unitaries,
-    utility,
-    operators
-)
+from . import hamiltonians, plotting, unitaries, utility, operators, integrators
 
 __all__ = [
     "utility",
@@ -14,4 +8,5 @@ __all__ = [
     "plotting",
     "unitaries",
     "operators",
+    "integrators"
 ] 
