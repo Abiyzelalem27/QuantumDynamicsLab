@@ -1,7 +1,18 @@
+
+
 import os
 import sys
 import subprocess
 import tempfile
+
+import pytest
+
+
+pytestmark = pytest.mark.skipif(
+    os.getenv("RUN_EXERCISE_SHEET_TESTS") != "1",
+    reason="exercise sheet notebook tests are disabled; set RUN_EXERCISE_SHEET_TESTS=1 to enable them",
+)
+
 
 class Test_exercise_sheets:
 
@@ -116,3 +127,48 @@ class Test_exercise_sheets:
                 check=True,
                 env={**os.environ, "MPLBACKEND": "Agg", "PYTHONIOENCODING": "utf-8"},
             )  # Check that exercise4_sol.ipynb runs without errors.
+
+    def test_exercise_solution_5(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            subprocess.run(
+                [
+                    "jupyter",
+                    "nbconvert",
+                    "--to",
+                    "script",
+                    "--output",
+                    "exercise5_sol",
+                    "--output-dir",
+                    temp_dir,
+                    "Solutions/exercise5_sol.ipynb",
+                ],
+                check=True,
+            )
+            subprocess.run(
+                [sys.executable, "-m", "IPython", f"{temp_dir}/exercise5_sol.py"],
+                check=True,
+                env={**os.environ, "MPLBACKEND": "Agg", "PYTHONIOENCODING": "utf-8"},
+            )  # Check that exercise5_sol.ipynb runs without errors.
+
+
+    def test_exercise_sheet_6(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            subprocess.run(
+                [
+                    "jupyter",
+                    "nbconvert",
+                    "--to",
+                    "script",
+                    "--output",
+                    "exercise6",
+                    "--output-dir",
+                    temp_dir,
+                    "Notebooks/exercise6.ipynb",
+                ],
+                check=True,
+            )
+            subprocess.run(
+                [sys.executable, "-m", "IPython", f"{temp_dir}/exercise6.py"],
+                check=True,
+                env={**os.environ, "MPLBACKEND": "Agg", "PYTHONIOENCODING": "utf-8"},
+            )  # Check that exercise6.ipynb runs without errors.
