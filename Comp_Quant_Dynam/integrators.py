@@ -1,11 +1,10 @@
 
 
-import numpy as np   # standard numerics library
-import numpy.linalg as LA
 import time
 import warnings 
-
-from Comp_Quant_Dynam.utility import expectation_value
+import numpy as np   # standard numerics library
+import numpy.linalg as LA
+from Comp_Quant_Dynam.utility import expectation_value 
 from Comp_Quant_Dynam.unitaries import calc_expv_ED
 
 

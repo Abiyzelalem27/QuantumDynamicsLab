@@ -4,6 +4,7 @@ import math
 from qutip import basis
 import numpy as np   # standard numerics library
 from scipy.special import factorial 
+from collections.abc import Iterable, Sequence 
 
 
 def example_func(x):
