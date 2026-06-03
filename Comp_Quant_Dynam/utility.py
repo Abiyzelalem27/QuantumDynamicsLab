@@ -1,19 +1,18 @@
 
 
-import math
-from qutip import basis
 import numpy as np   # standard numerics library
-from scipy.special import factorial 
-from collections.abc import Iterable, Sequence 
+from collections.abc import Iterable, Sequence
+from numpy import pi, sin, cos, tan, arcsin, arccos, arctan, sqrt, exp
+from scipy.special import factorial, binom
 
 
-def example_func(x):
+def example_func(x): 
     """
     Example function to demonstrate the repository structure.
     Returns the ground state wavefunction of the quantum harmonic oscillator at position 'x' in numerical units.
     """
 
-    return 1 / np.pi ** (1 / 4) * np.exp(-x ** 2 / 2)
+    return 1 / pi ** (1 / 4) * exp(-x ** 2 / 2)
 
 
 #################### Solution sheet 2 ####################
@@ -39,7 +38,7 @@ def FT(psi, x, k):
     """
     npoints = len(x)
     assert len(k) == npoints, "Length of k must match length of x"
-    return np.sum(psi * np.exp(-1j * np.outer(k, x)), axis=1)
+    return np.sum(psi * exp(-1j * np.outer(k, x)), axis=1)
 
 def iFT(phi, x, k):
     """
@@ -47,7 +46,7 @@ def iFT(phi, x, k):
     """
     npoints = len(x)
     assert len(k) == npoints, "Length of k must match length of x"
-    return 1 / npoints * np.sum(phi * np.exp(1j * np.outer(x, k)), axis=1)
+    return 1 / npoints * np.sum(phi * exp(1j * np.outer(x, k)), axis=1)
 
 def gaussian_wave_packet(x, x0, sigma, p0):
     """
@@ -56,7 +55,7 @@ def gaussian_wave_packet(x, x0, sigma, p0):
     norm = 1 / np.sqrt(np.sqrt(2 * np.pi) * sigma)
     # p0 * x0 is a global phase factor that we can ignore, so we can omit it
     #  in the expression for the wave packet.
-    return norm * np.exp(-(x - x0) ** 2 / (4 * sigma ** 2) + 1j * p0 * x)
+    return norm * exp(-(x - x0) ** 2 / (4 * sigma ** 2) + 1j * p0 * x)
 
 def create_tvecs(tsteps, dt):
     """
@@ -101,32 +100,22 @@ def create_coherent_state(N, alpha):
     """
 
     nvec = np.arange(N)
-    state = np.exp(-np.abs(alpha) ** 2 / 2) * np.power(alpha, nvec) / np.sqrt(factorial(nvec))
+    state = exp(-np.abs(alpha) ** 2 / 2) * np.power(alpha, nvec) / sqrt(factorial(nvec))
     return state
 
 def expectation_value(state, operator):
     """
     Computes the expectation value of an `operator` in a given `state`.
+    The `operator` argument can be either a single operator or an iterable of operators.
+    If it is an iterable, the function returns a vector of expectation values for each operator.
     """
+    n_obsv, operator = check_if_sized(operator) 
+    if n_obsv > 1:
+        return np.array([expectation_value(state, op) for op in operator])
 
     return np.vdot(state, operator @ state)
 
-    
-##################### lecture 5  ###################
-
-def create_qubit_state(theta, phi):
-    """
-    Creates a QuTiP state object (Qobj) for a given theta and phi.
-    theta: angle from the z-axis [0, pi]
-    phi: azimuthal angle [0, 2pi]
-    basis(2,0) = qubit in state |0⟩
-    basis(2,1) = qubit in state |1⟩
-    """
-    state = (np.cos(theta/2) * basis(2, 0) + 
-            np.exp(1j * phi) * np.sin(theta/2) * basis(2, 1))
-    return state 
-
-def check_if_sized(obsv_vec):
+def check_if_sized(obsv_vec): 
     """
     Helper function to check if the input `obsv_vec` is an iterable of operators or a single operator, and to determine the number of observables.
     If `obsv_vec` is a single operator or a Sequence containing a single operator, it returns (1, obsv_vec).
@@ -145,3 +134,159 @@ def check_if_sized(obsv_vec):
         n_obsv = 1
 
     return n_obsv, obsv_vec
+
+
+##################### Exercise sheet 7 ###################
+
+
+def CSS(N, theta, phi):
+    """
+    Returns the coefficients of the coherent spin state (CSS) |theta, phi> in the Dicke basis of dimension N+1.
+    The CSS is defined as:
+    
+    |theta, phi> = sum_{k=0}^N sqrt(binomial(N,k)) * (cos(theta/2)^k * sin(theta/2)^(N-k) * exp(i * k * phi)) |k>
+    
+    where |k> is the Dicke state with k 0-spins (spin up) and N-k 1-spins (spin down).
+    Note that the CSS is a superposition of Dicke states with different numbers of excitations, and the coefficients depend on the angles theta and phi.
+    The CSS is a generalization of the coherent state for spin systems, and it can be used to describe states that are localized around a specific point on the Bloch sphere.
+    """
+    
+    # exceptions to avoid 0^0
+    if theta == np.pi:
+        return np.eye(1, N + 1, 0)[0]
+    elif theta == 0:
+        return np.eye(1, N + 1 , N)[0]
+    else:
+        kvec = np.arange(0, N + 1)
+        trigonometric_part = cos(theta / 2) ** kvec * sin(theta / 2) ** (N - kvec) * exp(1j * kvec * phi)
+        return trigonometric_part * sqrt(binom(N, kvec))
+
+def proj_CSS(psi, N, theta, phi):
+    """
+    Computes the projection of a state `psi` onto a coherent spin state (CSS) defined by angles `theta` and `phi` for a system of `N` spins.
+    """
+    
+    css_state = CSS(N, theta, phi)
+    return np.abs(psi.conj().T @ css_state) ** 2
+
+def Husimi_th_ph(N, psi, nth, nph):
+    """
+    Computes the Husimi distribution of a state `psi` on a grid of angles `theta` and `phi` for a system of `N` spins.
+    The grid is defined by `nth` points in the theta direction ([0, pi]) and `nph` points in the phi direction ([0, 2*pi)).
+    Returns the grid of theta and phi values and the corresponding Husimi distribution values.
+    """
+    Theta = np.linspace(0, pi, nth, endpoint=True)
+    Phi = np.linspace(0, 2 * pi, nph, endpoint=False)
+    # container for Husimi function
+    H = np.zeros((nth, nph))
+    # calculate H on the grid
+    for x_idx, theta in enumerate(Theta):
+        for y_idx, phi in enumerate(Phi):
+            H[x_idx, y_idx] = proj_CSS(psi, N, theta, phi)
+    return Theta, Phi, H
+
+
+def Husimi_z_th(N, psi, nz, nph):
+    """
+    Computes the Husimi distribution of a state `psi` on a grid of `z` and `phi` for a system of `N` spins.
+    The grid is defined by `nz` points in the z direction ([-1, 1]) and `nph` points in the phi direction ([0, 2*pi)).
+    Returns the grid of z and phi values and the corresponding Husimi distribution values.
+    """
+
+    Z = np.linspace(-1, 1, nz, endpoint=True)
+    th = arccos(Z)
+    Phi = np.linspace(0, 2 * pi, nph, endpoint=False)
+    H = np.zeros((nz, nph))
+    for x_idx, theta in enumerate(th):
+        for y_idx, phi in enumerate(Phi):
+            H[x_idx, y_idx] = proj_CSS(psi, N, theta, phi)
+    return Z, Phi, H
+    
+
+def Husimi_front(N, psi, nz, ny):
+    """
+    Computes the Husimi distribution of a state `psi` on a grid of `z` and `y` for a system of `N` spins, looking from the +x direction.
+    The grid is defined by `nz` points in the z direction ([-1, 1]) and `ny` points in the y direction ([-1, 1]).
+    Returns the grid of z and y values and the corresponding Husimi distribution values.
+    """
+
+    Z = np.linspace(-1, 1, nz, endpoint=True)
+    Y = np.linspace(-1, 1, ny, endpoint=True)
+    H = np.zeros((nz, ny))
+    mask = np.zeros_like(H, dtype=bool) # make pixels outside of the circle white
+    for idx_z, z in enumerate(Z):
+        for idx_y, y in enumerate(Y):
+            if z ** 2 + y ** 2 > 1: # outside allowed region
+                H[idx_z, idx_y] = 0
+                mask[idx_z, idx_y] = True
+            else:
+                theta = arccos(z)
+                if theta == 0 or theta == np.pi: # in this case phi is undetermined
+                    phi = 0
+                else:
+                    phi = arcsin(y / sin(theta)) # corresponds to positive x
+                H[idx_z, idx_y] = proj_CSS(psi, N, theta, phi)
+                mask[idx_z, idx_y] = False
+    H = np.ma.array(H, mask=mask)
+    return Z, Y, H
+
+def Husimi_back(N, psi, nz, ny):
+    """
+    Computes the Husimi distribution of a state `psi` on a grid of `z` and `y` for a system of `N` spins, looking from the -x direction.
+    The grid is defined by `nz` points in the z direction ([-1, 1]) and `ny` points in the y direction ([-1, 1]).
+    Returns the grid of z and y values and the corresponding Husimi distribution values.
+    """
+    
+    Z = np.linspace(-1, 1, nz, endpoint=True)
+    Y = np.linspace(-1, 1, ny, endpoint=True)
+    H = np.zeros((nz, ny))
+    mask = np.zeros_like(H, dtype=bool)
+    for idx_z, z in enumerate(Z):
+        for idx_y, y in enumerate(Y):
+            if z ** 2 + y ** 2 > 1:
+                H[idx_z, idx_y] = 0
+                mask[idx_z, idx_y] = True
+            else:
+                theta = arccos(z)
+                if theta == 0 or theta == pi:
+                    phi = 0
+                else:
+                    phi = pi - arcsin(y / sin(theta)) # corresponds to negative x
+                H[idx_z, idx_y] = proj_CSS(psi, N, theta, phi)
+                mask[idx_z, idx_y] = False
+    H = np.ma.array(H, mask = mask)
+    return Z, Y, H
+
+def Husimi_top(N, psi, nx, ny):
+    """
+    Computes the Husimi distribution of a state `psi` on a grid of `x` and `y` for a system of `N` spins, looking from the +z direction.
+    The grid is defined by `nx` points in the x direction ([-1, 1]) and `ny` points in the y direction ([-1, 1]).
+    Returns the grid of x and y values and the corresponding Husimi distribution values.
+    """
+    
+    X = np.linspace(-1 , 1, nx, endpoint=True)
+    Y = np.linspace(-1 , 1, ny, endpoint=True)
+    H = np.zeros((nx, ny))
+    mask = np.zeros_like(H, dtype=bool)
+    for idx_x, x in enumerate(X):
+        for idx_y, y in enumerate(Y):
+            if x ** 2 + y ** 2 > 1:
+                H[idx_x, idx_y] = 0
+                mask[idx_x, idx_y] = True
+            else:
+                z = np.sqrt(1 - x ** 2 - y ** 2)
+                theta = np.arccos(z)
+                # avoid dividing by 0; Gets a bit tricky.
+                if x == 0:
+                    if y >= 0:
+                        phi = pi / 2
+                    else:
+                        phi = 3 * pi / 2
+                elif x > 0:
+                    phi = np.arctan(y / x)
+                else:
+                    phi = pi + arctan(y / x)
+                H[idx_x, idx_y] = proj_CSS(psi, N, theta, phi)
+                mask[idx_x, idx_y] = False
+    H = np.ma.array(H, mask=mask)
+    return X, Y, H
