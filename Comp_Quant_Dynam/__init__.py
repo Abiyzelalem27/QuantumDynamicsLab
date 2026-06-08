@@ -1,6 +1,6 @@
 
 
-from . import hamiltonians, plotting, unitaries, utility, operators, integrators, qr
+from . import hamiltonians, plotting, unitaries, utility, operators, integrators
 
 __all__ = [
     "utility",
@@ -8,6 +8,6 @@ __all__ = [
     "plotting",
     "unitaries",
     "operators",
-    "integrators", 
-    "qr"
+    "integrators"
+
 ] 

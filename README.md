@@ -4,6 +4,8 @@
 
 [![codecov](https://codecov.io/github/Abiyzelalem27/CQD_SS26/graph/badge.svg)](https://codecov.io/github/Abiyzelalem27/CQD_SS26)
 
+
+
 # 📌 Overview
 
 This repository contains the weekly programming exercises for the course “Computational Quantum Dynamics” (Summer Semester 2026).

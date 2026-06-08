@@ -1,12 +1,10 @@
 import numpy as np   # standard numerics library
-
-import numpy as np   # standard numerics library
 import math
 from scipy.special import hermite as herm
 import scipy.sparse as sparse # routines for sparse matrices
 
 from Comp_Quant_Dynam.utility import state2idx, idx2state
-from Comp_Quant_Dynam.operators import diagonal_op_sparse, n_party_op_sparse, x_operator_sparse, Sx_sparse, Sz_sparse, Sx_symm, Sz2_symm 
+from Comp_Quant_Dynam.operators import diagonal_op_sparse, n_party_op_sparse, x_operator_sparse, Sx_sparse, Sz_sparse, Sx_symm, Sz2_symm
 
 #################### Solution sheet 1 ####################
 
@@ -15,8 +13,9 @@ def HO_eigenstates_exact(n, x):
     """
     Returns the n-th eigenstate of the quantum harmonic oscillator at position 'x' in numerical units.
     """
+
     normalization = 1 / np.sqrt(2 ** n * math.factorial(n) * np.sqrt(np.pi)) 
-    return normalization * herm(n)(x) * np.exp(-x ** 2 / 2) 
+    return normalization * herm(n)(x) * np.exp(-x ** 2 / 2)
 
 
 def HO_eigenenergies_exact(n):
@@ -68,7 +67,7 @@ def H_kinetic_sparse(x):
     off_diag = -0.5 * np.ones(n_points - 1)
     H_kin = sparse.diags_array(
         [main_diag, off_diag, off_diag],
-        offsets = [0, 1, -1],
+        offsets = (0, 1, -1)
     ) / (dx * dx)
     return H_kin
 
@@ -216,7 +215,7 @@ def class_traj(lam, ini, t):
     x2 = xcm - xrel / 2 # trajectory of the second oscillator
     return x1, x2
 
-def build_H_coupled_HO_improved(N1, N2, lam): 
+def build_H_coupled_HO_improved(N1, N2, lam):
     """
     Builds the Hamiltonian matrix for two coupled harmonic oscillators in the number basis using the ladder operators, where `N1` and `N2` are the maximum occupation numbers for the two oscillators, and `lam` is the coupling strength.
     The Hamiltonian is given by:
@@ -275,16 +274,9 @@ def HO_product_eigenstates(N1, N2, xgrid):
         basis_state_pos[k] = np.kron(state_1, state_2)
     return basis_state_pos
 
-##################### lecture 5  ################### 
 
+##################### Solution sheet 5 ####################
 
-def hermitian_operator(a0, a1, a2, a3):
-    """
-    Creates a Hermitian operator using
-    the Pauli basis operators.
-    """
-    H = (a0 * I + a1 * X + a2 * Y + a3 * Z)
-    return H 
 
 def build_H_TFIM(N, ome):
     """
@@ -309,5 +301,20 @@ def build_H_TFIM_symm(N, ome):
     
     Sx = Sx_symm(N)
     Sz2 = Sz2_symm(N)
-    H_symm = -Sz2 / N - ome * Sx
-    return H_symm 
+    H_symm = -Sz2 / N - ome * Sx 
+    return H_symm
+    
+
+##################### Solution sheet 7 ####################
+
+
+def E_MF(z, phi, omega):
+    """
+    Returns the mean-field energy of the transverse field Ising model (TFIM) for a given magnetization `z`, phase `phi`, and transverse field strength `omega`.
+    The mean-field energy is given by:
+    E_MF(z, phi) = -z^2 / 2 - omega * sqrt(1 - z^2) * cos(phi)
+    where z is the magnetization along the z-axis, phi is the phase of the transverse magnetization in the x-y plane, and omega is the strength of the transverse field.
+    """
+    r2 = 1 - z ** 2 
+    r2 = np.maximum(r2, 1e-10) # avoid numerical issues when z is close to 1 or -1, which would lead to r being close to zero and causing instability in the calculation of the mean-field energy
+    return -z ** 2 / 2 - omega * np.sqrt(r2) * np.cos(phi)
